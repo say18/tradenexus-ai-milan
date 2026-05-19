@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeNexus AI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="static\style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand" style="display:flex;align-items:center;gap:16px;">
+    <a href="/" style="color:var(--muted,#5a7a99);font-size:12px;text-decoration:none;opacity:0.7;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← Home</a>
+    <span style="color:#1e2d42;">|</span>⚡ TradeNexus AI</div>
+  <div class="nav-tab active" onclick="showPage('supplier')">⚡ Supplier Risk</div><a href="/guide" target="_blank" style="padding:18px 12px;font-size:11px;color:#3b6eff;text-decoration:none;opacity:0.8;border-bottom:2px solid transparent;white-space:nowrap;" title="How supplier risk works">📖 Guide</a>
+  <div class="nav-tab" onclick="showPage('document')">📄 Doc Analysis</div>
+  <div class="nav-tab" onclick="showPage('visual')">📸 Visual Check</div>
+  <div class="nav-tab" onclick="showPage('dealflow')">🚀 DealFlow</div>
+  <div class="nav-tab" onclick="showPage('dashboard')">📊 Dashboard</div>
+  <div class="nav-tab" onclick="showPage('marketpulse')">🔮 MarketPulse</div>
+  <div class="nav-tab" onclick="showPage('cyberrisk')">🔐 Cyber Risk</div>
+  <div class="nav-tab" onclick="showPage('microecon')">📊 Micro-Econ</div>
+  <div class="nav-tab" onclick="showPage('audittrail')">🌙 Audit Trail</div>
+</nav>
+
+    
+<!-- ── PAGE 1: SUPPLIER RISK ── -->
+<div class="page active" id="page-supplier">
+  <div class="card">
+    <h2>🔍 Analyze Supplier Risk</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Supplier Name *</label>
+        <input type="text" id="s-name" placeholder="e.g. Evergrande" />
+      </div>
+      <div class="form-group">
+        <label>Industry</label>
+        <input type="text" id="s-industry" placeholder="e.g. textile" />
+      </div>
+      <div class="form-group">
+        <label>Country</label>
+        <input type="text" id="s-country" placeholder="e.g. China" />
+      </div>
+    </div>
+    <button class="btn btn-primary" id="s-btn" onclick="analyzeSupplier()">⚡ Analyze Supplier</button>
+  </div>
+
+  <div class="loading" id="s-loading">
+    <div class="spinner"></div>
+    <p id="s-step">📡 Fetching news &amp; analyzing risk...</p>
+  </div>
+
+  <div class="result-area" id="s-result"></div>
+</div>
+
+<!-- ── PAGE 2: DOCUMENT ── -->
+<div class="page" id="page-document">
+  <div class="card">
+    <h2>📄 Document Analysis</h2>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label>Supplier Name</label>
+      <input type="text" id="d-name" placeholder="e.g. Beximco Group" />
+    </div>
+    <div class="upload-area" onclick="document.getElementById('d-file').click()">
+      <div style="font-size:32px;">📄</div>
+      <p>Click to upload PDF (Annual Report, Contract, etc.)</p>
+      <p id="d-filename" class="file-name"></p>
+      <input type="file" id="d-file" accept=".pdf" onchange="updateFileName('d-file','d-filename')" />
+    </div>
+    <button class="btn btn-primary" id="d-btn" onclick="analyzeDocument()">📄 Analyze Document</button>
+  </div>
+
+  <div class="loading" id="d-loading">
+    <div class="spinner"></div>
+    <p>📄 AI reading document (may take 30-60s)...</p>
+  </div>
+
+  <div class="result-area" id="d-result"></div>
+</div>
+
+<!-- ── PAGE 3: VISUAL ── -->
+<div class="page" id="page-visual">
+  <div class="card">
+    <h2>📸 Factory Visual Check</h2>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label>Supplier Name</label>
+      <input type="text" id="v-name" placeholder="e.g. Beximco Factory" />
+    </div>
+    <div class="upload-area" onclick="document.getElementById('v-file').click()">
+      <div style="font-size:32px;">📸</div>
+      <p>Click to upload factory/warehouse photo (JPG, PNG)</p>
+      <p id="v-filename" class="file-name"></p>
+      <input type="file" id="v-file" accept=".jpg,.jpeg,.png,.webp" onchange="updateFileName('v-file','v-filename')" />
+    </div>
+    <button class="btn btn-primary" id="v-btn" onclick="analyzeVisual()">📸 Analyze Image</button>
+  </div>
+
+  <div class="loading" id="v-loading">
+    <div class="spinner"></div>
+    <p>🔍 AI analyzing factory image...</p>
+  </div>
+
+  <div class="result-area" id="v-result"></div>
+</div>
+
+<!-- ── PAGE 4: DEALFLOW ── -->
+<div class="page" id="page-dealflow">
+  <div class="card">
+    <h2>🚀 Find Global Buyers</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Your Product *</label>
+        <input type="text" id="sc-product" placeholder="e.g. leather bags" />
+      </div>
+      <div class="form-group">
+        <label>Industry *</label>
+        <input type="text" id="sc-industry" placeholder="e.g. fashion" />
+      </div>
+      <div class="form-group">
+        <label>Target Region</label>
+        <select id="sc-region">
+          <option value="Europe">Europe</option>
+          <option value="North America">North America</option>
+          <option value="Middle East">Middle East</option>
+          <option value="Asia Pacific">Asia Pacific</option>
+          <option value="Global">Global</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>Your Company Name</label>
+      <input type="text" id="sc-company" placeholder="e.g. Dhaka Leather Co." />
+    </div>
+    <button class="btn btn-primary" id="sc-btn" onclick="scoutBuyers()">🔍 Find Buyers</button>
+  </div>
+
+  <div class="loading" id="sc-loading">
+    <div class="spinner"></div>
+    <p>🔍 AI scouting global buyers...</p>
+  </div>
+
+  <div class="result-area" id="sc-result"></div>
+</div>
+
+<!-- ── PAGE 5: DASHBOARD ── -->
+<div class="page" id="page-dashboard">
+  <div class="card">
+    <h2>📊 Analytics Dashboard</h2>
+    <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">🔄 Refresh</button>
+  </div>
+
+  <div class="loading" id="db-loading">
+    <div class="spinner"></div>
+    <p>📊 Loading analytics...</p>
+  </div>
+
+  <div class="result-area" id="db-result"></div>
+</div>
+
+<!-- ── PAGE 6: MARKETPULSE ── -->
+<div class="page" id="page-marketpulse">
+  <div class="card">
+    <h2>🔮 MarketPulse AI</h2>
+    <p style="opacity:0.7;margin-top:6px;">Bloomberg-level market prediction for $29/month. From next 24 hours to 10 years ahead.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:16px;">📊 Market Prediction Setup</h3>
+    <div class="mp-form-grid">
+      <div class="mp-form-group">
+        <label>Commodity / Raw Material</label>
+        <input type="text" id="mp-commodity" placeholder="e.g. cotton, steel, oil, leather" />
+      </div>
+      <div class="mp-form-group">
+        <label>Your Industry</label>
+        <input type="text" id="mp-industry" placeholder="e.g. textile, garments, electronics" />
+      </div>
+      <div class="mp-form-group">
+        <label>Region</label>
+        <select id="mp-region">
+          <option value="Global">Global</option>
+          <option value="Asia">Asia</option>
+          <option value="EU">European Union</option>
+          <option value="North America">North America</option>
+          <option value="South Asia">South Asia</option>
+        </select>
+      </div>
+      <div class="mp-form-group">
+        <label>Your Country</label>
+        <input type="text" id="mp-country" value="Bangladesh" />
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="runMarketPulse()">🔮 Run Full Prediction</button>
+  </div>
+
+  <div class="loading" id="mp-loading" style="display:none;">
+    <div class="spinner"></div>
+    <p>🔮 AI analyzing markets... (30-60s)</p>
+  </div>
+
+  <div id="mp-results" style="display:none;">
+
+    <div class="card">
+      <h3>🔴 Layer 1 — Tomorrow (24–48 Hours)</h3>
+      <div class="mp-hero">
+        <div class="mp-direction" id="mp-direction">—</div>
+        <div class="mp-meta">
+          <div>Probability: <strong id="mp-prob">—</strong>%</div>
+          <div>Price Change: <strong id="mp-change">—</strong>%</div>
+          <div>Confidence: <strong id="mp-conf">—</strong></div>
+        </div>
+      </div>
+      <div class="mp-detail-grid">
+        <div class="mp-detail-box"><h4>⚡ Key Drivers</h4><ul id="mp-drivers"></ul></div>
+        <div class="mp-detail-box"><h4>✅ Recommendation</h4><p id="mp-recommendation" style="color:#22c55e;font-weight:600;"></p></div>
+        <div class="mp-detail-box"><h4>⚠️ Risk Warning</h4><p id="mp-risk" style="color:#f59e0b;"></p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🟡 Layer 2 — Industry Trend (1–5 Years)</h3>
+      <div class="mp-stats-row">
+        <div class="mp-stat"><span class="mp-stat-label">Growth Outlook</span><span class="mp-stat-val" id="tr-outlook">—</span></div>
+        <div class="mp-stat"><span class="mp-stat-label">CAGR Estimate</span><span class="mp-stat-val" id="tr-cagr">—</span></div>
+        <div class="mp-stat"><span class="mp-stat-label">Confidence</span><span class="mp-stat-val" id="tr-conf">—</span></div>
+      </div>
+      <div class="mp-detail-grid">
+        <div class="mp-detail-box"><h4>🚀 Opportunities</h4><ul id="tr-opportunities"></ul></div>
+        <div class="mp-detail-box"><h4>⚠️ Threats</h4><ul id="tr-threats"></ul></div>
+        <div class="mp-detail-box"><h4>✅ SME Actions</h4><ul id="tr-actions"></ul></div>
+      </div>
+      <div class="mp-trends-grid" id="tr-trends-grid"></div>
+    </div>
+
+    <div class="card">
+      <h3>🟢 Layer 3 — Mega Trends (5–10 Years)</h3>
+      <div class="mp-verdict-box"><span id="mega-verdict">—</span></div>
+      <div class="mp-detail-grid">
+        <div class="mp-detail-box"><h4>🌍 Biggest Opportunity</h4><p id="mega-opportunity" style="color:#22c55e;font-weight:600;"></p></div>
+        <div class="mp-detail-box"><h4>💀 Biggest Risk</h4><p id="mega-risk" style="color:#f59e0b;"></p></div>
+      </div>
+      <div id="mega-trends-list" style="display:flex;flex-direction:column;gap:12px;margin-top:16px;"></div>
+      <div class="mp-detail-box" style="margin-top:16px;"><h4>🛡️ Survival Strategies</h4><ul id="mega-strategies"></ul></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PAGE 7: CYBER RISK ── -->
+<div class="page" id="page-cyberrisk">
+  <div class="card">
+    <h2>🔐 Cyber Risk Agent</h2>
+    <p style="opacity:0.7;margin-top:6px;">Scans supplier IT security using free OSINT — SSL, open ports, data breaches, malware flags. No API key needed.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-bottom:14px;">🔍 Supplier Cyber Check</h3>
+    <div class="mp-form-grid">
+      <div class="mp-form-group"><label>Company Name</label><input type="text" id="cr-company" placeholder="e.g. Evergrande, TSMC" /></div>
+      <div class="mp-form-group"><label>Domain (optional)</label><input type="text" id="cr-domain" placeholder="e.g. evergrande.com" /></div>
+    </div>
+    <button class="btn btn-primary" onclick="runCyberRisk()">🔐 Run Cyber Risk Check</button>
+  </div>
+  <div class="loading" id="cr-loading" style="display:none;"><div class="spinner"></div><p>🔐 OSINT scanning... (30-60s)</p></div>
+  <div id="cr-results" style="display:none;">
+    <div class="card">
+      <h3>📊 Risk Score</h3>
+      <div class="cr-score-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <span style="font-size:42px;font-weight:900;" id="cr-score-num">—</span><span style="opacity:0.5;">/100</span>
+            <span id="cr-level" class="cr-badge" style="margin-left:12px;">—</span>
+          </div>
+          <div style="font-size:13px;opacity:0.6;">Domain: <strong id="cr-domain-display">—</strong></div>
+        </div>
+        <div class="cr-score-track"><div class="cr-score-bar" id="cr-score-bar" style="width:0%"></div></div>
+      </div>
+      <div class="cr-osint-grid">
+        <div class="cr-osint-item"><div class="co-label">🔒 SSL Certificate</div><div class="co-value" id="cr-ssl">—</div></div>
+        <div class="cr-osint-item"><div class="co-label">🌐 Open Ports</div><div class="co-value" id="cr-ports">—</div></div>
+        <div class="cr-osint-item"><div class="co-label">💀 Data Breach</div><div class="co-value" id="cr-breach">—</div></div>
+        <div class="cr-osint-item"><div class="co-label">🦠 Malware Scan</div><div class="co-value" id="cr-malware">—</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤖 AI Analysis</h3>
+      <div class="mp-detail-grid">
+        <div class="mp-detail-box"><h4>⚡ Key Vulnerabilities</h4><ul id="cr-vulns"></ul></div>
+        <div class="mp-detail-box"><h4>🚩 Red Flags</h4><ul id="cr-redflags"></ul></div>
+        <div class="mp-detail-box"><h4>✅ Positive Signals</h4><ul id="cr-positive"></ul></div>
+        <div class="mp-detail-box"><h4>🎯 Attack Vectors</h4><ul id="cr-vectors"></ul></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="mp-detail-box"><h4>✅ Recommendation</h4><p id="cr-recommendation" style="color:#22c55e;font-weight:600;margin:0;"></p></div>
+        <div class="mp-detail-box" style="margin-top:10px;"><h4>📋 Summary</h4><p id="cr-summary" style="margin:0;opacity:0.85;"></p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE 8: MICRO-ECON ── -->
+<div class="page" id="page-microecon">
+  <div class="card">
+    <h2>📊 Micro-Econ Agent</h2>
+    <p style="opacity:0.7;margin-top:6px;">Analyzes supplier market concentration (HHI Index) and applies Utility Maximization to find the best purchase decision within your budget.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-bottom:14px;">⚙️ Setup</h3>
+    <div class="mp-form-grid">
+      <div class="mp-form-group"><label>Commodity</label><input type="text" id="me-commodity" placeholder="e.g. cotton, steel" /></div>
+      <div class="mp-form-group"><label>Industry</label><input type="text" id="me-industry" placeholder="e.g. textile, garments" /></div>
+      <div class="mp-form-group"><label>Total Budget ($)</label><input type="number" id="me-budget" placeholder="e.g. 50000" /></div>
+      <div class="mp-form-group"><label>Country</label><input type="text" id="me-country" value="Bangladesh" /></div>
+    </div>
+    <h4 style="margin-bottom:10px;">➕ Add Suppliers</h4>
+    <div class="me-input-row">
+      <div class="mp-form-group"><label>Name</label><input type="text" id="me-sup-name" placeholder="Supplier A" /></div>
+      <div class="mp-form-group"><label>Market Share %</label><input type="number" id="me-sup-share" value="30" min="0" max="100" /></div>
+      <div class="mp-form-group"><label>Price/Unit ($)</label><input type="number" id="me-sup-price" value="10" step="0.1" /></div>
+      <div class="mp-form-group"><label>Quality (0-10)</label><input type="number" id="me-sup-quality" value="7" min="0" max="10" /></div>
+      <div class="mp-form-group"><label>Units Needed</label><input type="number" id="me-sup-units" value="100" /></div>
+    </div>
+    <button class="btn btn-secondary" onclick="addMeSupplier()" style="margin-bottom:14px;">➕ Add Supplier</button>
+    <div id="me-supplier-list"></div>
+    <button class="btn btn-primary" onclick="runMicroEcon()" style="margin-top:12px;">📊 Run Micro-Econ Analysis</button>
+  </div>
+  <div class="loading" id="me-loading" style="display:none;"><div class="spinner"></div><p>📊 Analyzing market economics...</p></div>
+  <div id="me-results" style="display:none;">
+    <div class="card">
+      <h3>🏭 Market Power Analysis (HHI)</h3>
+      <div class="me-stat-row">
+        <div class="me-stat"><div class="ms-label">HHI Index</div><div class="ms-value" id="me-hhi">—</div></div>
+        <div class="me-stat"><div class="ms-label">Market Structure</div><div class="ms-value" style="font-size:13px;" id="me-market-structure">—</div></div>
+        <div class="me-stat"><div class="ms-label">Monopoly Risk</div><div class="ms-value" id="me-monopoly-risk">—</div></div>
+        <div class="me-stat"><div class="ms-label">Your Bargaining Power</div><div class="ms-value" id="me-bargaining">—</div></div>
+      </div>
+      <p id="me-interpretation" style="opacity:0.8;font-size:14px;margin:0;"></p>
+    </div>
+    <div class="card">
+      <h3>🎯 Optimal Strategy</h3>
+      <div class="me-action-box">
+        <div style="font-size:22px;font-weight:900;color:#6366f1;" id="me-action">—</div>
+        <div style="margin-top:8px;font-size:14px;">Lock in: <strong id="me-lockin" style="color:#22c55e;">—</strong> of budget</div>
+        <p id="me-reasoning" style="font-size:13px;opacity:0.8;margin:8px 0 0;"></p>
+        <p id="me-leverage" style="font-size:13px;color:#f59e0b;margin:6px 0 0;font-style:italic;"></p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>💡 Utility Maximization Result</h3>
+      <div class="me-stat-row">
+        <div class="me-stat"><div class="ms-label">Best Supplier</div><div class="ms-value" style="font-size:14px;color:#22c55e;" id="me-best-supplier">—</div></div>
+        <div class="me-stat"><div class="ms-label">Utility/Dollar</div><div class="ms-value" id="me-utility-score">—</div></div>
+        <div class="me-stat"><div class="ms-label">Est. Savings</div><div class="ms-value" id="me-savings">—</div></div>
+      </div>
+      <p id="me-verdict" style="color:#22c55e;font-weight:600;font-size:14px;margin:8px 0;"></p>
+      <h4 style="margin:14px 0 8px;">📋 Ranked Suppliers</h4>
+      <table class="me-ranked-table">
+        <thead><tr><th>Supplier</th><th>Price/Unit</th><th>Quality</th><th>Utility/$</th><th>Total Cost</th><th>Affordable</th></tr></thead>
+        <tbody id="me-ranked-tbody"></tbody>
+      </table>
+      <p id="me-summary" style="opacity:0.8;font-size:13px;margin-top:14px;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE 9: AUDIT TRAIL ── -->
+<div class="page" id="page-audittrail">
+  <div class="card">
+    <h2>🌙 Nightly Audit Trail</h2>
+    <p style="opacity:0.7;margin-top:6px;">Vultr Cron Scheduler runs every night at midnight — automatically checks all tracked suppliers. Zero human trigger. 100% Autonomous.</p>
+  </div>
+  <div class="card" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="loadLastAudit()">🔄 Load Last Audit</button>
+    <button class="btn btn-secondary" id="at-run-btn" onclick="runAuditNow()">▶️ Run Audit Now</button>
+    <span style="font-size:12px;opacity:0.5;">Cron: <code>0 0 * * * python nightly_audit_trail.py</code></span>
+  </div>
+  <div class="loading" id="at-loading" style="display:none;"><div class="spinner"></div><p>🌙 Loading audit results...</p></div>
+  <div id="at-results" style="display:none;">
+    <div class="card">
+      <h3>📊 Last Run Summary</h3>
+      <div class="at-stats-row">
+        <div class="at-stat"><div class="as-label">🕐 Run Time</div><div class="as-value" style="font-size:13px;" id="at-timestamp">—</div></div>
+        <div class="at-stat"><div class="as-label">⏱️ Duration</div><div class="as-value" id="at-duration">—</div></div>
+        <div class="at-stat"><div class="as-label">🏭 Checked</div><div class="as-value" id="at-checked">—</div></div>
+        <div class="at-stat"><div class="as-label" style="color:#ef4444;">🚨 Critical</div><div class="as-value" style="color:#ef4444;" id="at-critical">—</div></div>
+        <div class="at-stat"><div class="as-label" style="color:#f59e0b;">⚠️ High Risk</div><div class="as-value" style="color:#f59e0b;" id="at-highrisk">—</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🚨 Alerts</h3>
+      <div id="at-alerts"></div>
+    </div>
+    <div class="card">
+      <h3>🏭 Supplier Results</h3>
+      <div id="at-supplier-results"></div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

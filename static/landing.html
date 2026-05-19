@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeNexus AI — Trade Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #04070d;
+  --surface: #080e18;
+  --border: rgba(255,255,255,0.07);
+  --accent: #00e5a0;
+  --accent2: #3b6eff;
+  --accent3: #ff5c5c;
+  --text: #e8f0f8;
+  --muted: #4a6580;
+  --card: rgba(13,20,35,0.8);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(0,229,160,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.12s ease;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59,110,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,110,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glow orbs */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-1 { width:600px; height:600px; background:rgba(0,229,160,0.06); top:-200px; right:-100px; }
+.orb-2 { width:500px; height:500px; background:rgba(59,110,255,0.06); bottom:-100px; left:-100px; }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 48px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(4,7,13,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.4; transform:scale(0.6); }
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--accent);
+  color: #000 !important;
+  padding: 9px 22px;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: #00ffb0 !important; transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 48px 80px;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title .line1 { display: block; color: var(--text); }
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--accent) 0%, #3b6eff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary-hero {
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 16px 36px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-primary-hero:hover { background: #00ffb0; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,229,160,0.25); }
+.btn-secondary-hero {
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 15px;
+  padding: 16px 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-secondary-hero:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
+
+/* STATS BAR */
+.stats-bar {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,14,24,0.8);
+  padding: 32px 48px;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+.stat-item {
+  flex: 1;
+  max-width: 220px;
+  text-align: center;
+  padding: 0 32px;
+  border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+
+/* MODULES SECTION */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 60px;
+  max-width: 600px;
+}
+
+/* MODULE CARDS */
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.module-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 14px;
+}
+.module-card.green::before { background: radial-gradient(circle at 0 0, rgba(0,229,160,0.08), transparent 60%); }
+.module-card.blue::before  { background: radial-gradient(circle at 0 0, rgba(59,110,255,0.08), transparent 60%); }
+.module-card.red::before   { background: radial-gradient(circle at 0 0, rgba(255,92,92,0.08), transparent 60%); }
+.module-card.purple::before{ background: radial-gradient(circle at 0 0, rgba(168,85,247,0.08), transparent 60%); }
+.module-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); }
+.module-card:hover::before { opacity: 1; }
+.module-card.featured {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(0,229,160,0.06), rgba(59,110,255,0.04));
+  border-color: rgba(0,229,160,0.2);
+}
+.module-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.module-icon.green { background: rgba(0,229,160,0.1); }
+.module-icon.blue  { background: rgba(59,110,255,0.1); }
+.module-icon.red   { background: rgba(255,92,92,0.1); }
+.module-icon.purple{ background: rgba(168,85,247,0.1); }
+.module-icon.gold  { background: rgba(251,191,36,0.1); }
+.module-icon.cyan  { background: rgba(6,182,212,0.1); }
+.module-card-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.tag-green { color: var(--accent); }
+.tag-blue  { color: #3b6eff; }
+.tag-red   { color: var(--accent3); }
+.tag-purple{ color: #a855f7; }
+.tag-gold  { color: #fbbf24; }
+.tag-cyan  { color: #06b6d4; }
+.module-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+.module-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.module-agents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.agent-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.module-arrow {
+  position: absolute;
+  top: 28px; right: 28px;
+  color: var(--muted);
+  font-size: 18px;
+  transition: all 0.2s;
+}
+.module-card:hover .module-arrow { color: var(--accent); transform: translate(2px,-2px); }
+
+/* TECH STACK */
+.tech-section {
+  position: relative;
+  z-index: 1;
+  background: rgba(8,14,24,0.6);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 48px;
+}
+.tech-inner { max-width: 1200px; margin: 0 auto; }
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+.tech-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.tech-card:hover { border-color: rgba(255,255,255,0.15); }
+.tech-provider {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.tech-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.tech-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.tech-models {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tech-model {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(0,229,160,0.06);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+
+
+/* CTA SECTION */
+.cta-section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 48px;
+  text-align: center;
+}
+.cta-box {
+  max-width: 700px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(59,110,255,0.06));
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 24px;
+  padding: 64px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at center, rgba(0,229,160,0.04), transparent 50%);
+  animation: rotate 20s linear infinite;
+}
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.cta-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.cta-sub {
+  color: var(--muted);
+  font-size: 16px;
+  margin-bottom: 36px;
+  position: relative;
+}
+.cta-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+}
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 16px;
+}
+.footer-text { font-size: 12px; color: var(--muted); }
+.footer-hackathon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-in { opacity:0; transform:translateY(30px); transition: all 0.7s ease; }
+.fade-in.visible { opacity:1; transform:translateY(0); }
+
+/* TICKER */
+.ticker-wrap {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  background: rgba(8,14,24,0.5);
+  padding: 12px 0;
+}
+.ticker {
+  display: flex;
+  gap: 0;
+  animation: ticker 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes ticker { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  border-right: 1px solid var(--border);
+}
+.ticker-item .up   { color: var(--accent); }
+.ticker-item .down { color: var(--accent3); }
+
+/* Responsive */
+@media(max-width:768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display:none; }
+  .hero { padding: 100px 24px 60px; }
+  .stats-bar { flex-wrap:wrap; padding:24px; gap:20px; }
+  .stat-item { border:none; flex:1 1 40%; }
+  .section { padding:60px 24px; }
+  .modules-grid { grid-template-columns:1fr; }
+  .module-card.featured { grid-column:span 1; }
+  .tech-grid { grid-template-columns:1fr 1fr; }
+  .compare-section { padding:60px 24px; }
+  .cta-section { padding:60px 24px; }
+  .cta-box { padding:40px 24px; }
+  footer { flex-direction:column; gap:12px; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-dot"></div>
+    TradeNexus AI
+  </div>
+  <ul class="nav-links">
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#tech">Technology</a></li>
+    
+    <li><a href="/app" class="nav-cta">Launch App →</a></li>
+  </ul>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap" style="margin-top:68px;">
+  <div class="ticker">
+    <span class="ticker-item">COTTON <span class="up">▲ +3.2%</span></span>
+    <span class="ticker-item">STEEL <span class="down">▼ -1.1%</span></span>
+    <span class="ticker-item">CRUDE OIL <span class="up">▲ +0.8%</span></span>
+    <span class="ticker-item">GOLD <span class="up">▲ +0.5%</span></span>
+    <span class="ticker-item">LEATHER <span class="down">▼ -2.4%</span></span>
+    <span class="ticker-item">COPPER <span class="up">▲ +1.7%</span></span>
+    <span class="ticker-item">WHEAT <span class="down">▼ -0.3%</span></span>
+    <span class="ticker-item">SILVER <span class="up">▲ +2.1%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">COTTON <span class="up">▲ +3.2%</span></span>
+    <span class="ticker-item">STEEL <span class="down">▼ -1.1%</span></span>
+    <span class="ticker-item">CRUDE OIL <span class="up">▲ +0.8%</span></span>
+    <span class="ticker-item">GOLD <span class="up">▲ +0.5%</span></span>
+    <span class="ticker-item">LEATHER <span class="down">▼ -2.4%</span></span>
+    <span class="ticker-item">COPPER <span class="up">▲ +1.7%</span></span>
+    <span class="ticker-item">WHEAT <span class="down">▼ -0.3%</span></span>
+    <span class="ticker-item">SILVER <span class="up">▲ +2.1%</span></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span>🏆</span> MILAN AI WEEK HACKATHON 2026 — lablab.ai
+  </div>
+  <h1 class="hero-title">
+    <span class="line1">Trade Smarter.</span>
+    <span class="line2">Grow Faster.</span>
+  </h1>
+  <p class="hero-sub">
+    11 autonomous AI agents that monitor supplier risk, discover global buyers, predict market movements, and run nightly security audits — all while you sleep.
+  </p>
+  <div class="hero-btns">
+    <button class="btn-primary-hero" onclick="window.location.href='/app'">
+      Launch Platform <span>→</span>
+    </button>
+    <button class="btn-secondary-hero" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">
+      See How It Works
+    </button>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">400M</div>
+    <div class="stat-label">SMEs FLYING BLIND</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">11</div>
+    <div class="stat-label">AUTONOMOUS AGENTS</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">4</div>
+    <div class="stat-label">AI SPONSORS</div>
+  </div>
+  
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">AUTONOMOUS AUDIT</div>
+  </div>
+</div>
+
+<!-- MODULES -->
+<section class="section" id="modules">
+  <div class="section-label">PLATFORM MODULES</div>
+  <h2 class="section-title fade-in">Four modules.<br>Eleven agents.</h2>
+
+  <div class="modules-grid">
+
+    <!-- SupplierPulse — featured -->
+    <div class="module-card green featured fade-in" onclick="window.location.href='/app'">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon green">⚡</div>
+      <div class="module-card-tag tag-green">MODULE A</div>
+      <div class="module-name">SupplierPulse</div>
+      <div class="module-desc">Real-time supplier risk monitoring powered by 5 specialized agents. News scanning, document analysis, factory visual inspection, and cybersecurity OSINT — all in one report.</div>
+      <div class="module-agents">
+        <span class="agent-chip">News Agent</span>
+        <span class="agent-chip">Risk Agent</span>
+        <span class="agent-chip">Doc Agent</span>
+        <span class="agent-chip">Visual Agent</span>
+        <span class="agent-chip">Cyber Risk Agent</span>
+      </div>
+    </div>
+
+    <!-- DealFlow -->
+    <div class="module-card blue fade-in" onclick="window.location.href='/app'">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon blue">🚀</div>
+      <div class="module-card-tag tag-blue">MODULE B</div>
+      <div class="module-name">DealFlow AI</div>
+      <div class="module-desc">Finds global buyers, scores each one for fit, and generates personalized cold outreach emails — automatically.</div>
+      <div class="module-agents">
+        <span class="agent-chip">Scout Agent</span>
+        <span class="agent-chip">Qualify Agent</span>
+        <span class="agent-chip">Outreach Agent</span>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="module-card red fade-in" onclick="window.location.href='/app'">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon red">📊</div>
+      <div class="module-card-tag tag-red">MODULE C</div>
+      <div class="module-name">Analytics Dashboard</div>
+      <div class="module-desc">Live risk heatmap, sales pipeline, price trends, and an AI-generated daily briefing with your top 3 priorities.</div>
+      <div class="module-agents">
+        <span class="agent-chip">Analytics Agent</span>
+        <span class="agent-chip">Daily Briefing</span>
+      </div>
+    </div>
+
+    <!-- MarketPulse -->
+    <div class="module-card purple fade-in" onclick="window.location.href='/app'">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon purple">🔮</div>
+      <div class="module-card-tag tag-purple">MODULE D</div>
+      <div class="module-name">MarketPulse AI</div>
+      <div class="module-desc">Three-layer market intelligence: 24–48hr price prediction, 1–5 year industry trends, and 5–10 year mega trend forecasts. Plus microeconomic utility optimization.</div>
+      <div class="module-agents">
+        <span class="agent-chip">Tomorrow Agent</span>
+        <span class="agent-chip">Trend Agent</span>
+        <span class="agent-chip">Mega Trend Agent</span>
+        <span class="agent-chip">Micro-Econ Agent</span>
+      </div>
+    </div>
+
+    <!-- Audit Trail -->
+    <div class="module-card fade-in" style="border-color:rgba(251,191,36,0.2);background:rgba(251,191,36,0.03);" onclick="window.location.href='/app'">
+      <span class="module-arrow" style="color:#fbbf24;">↗</span>
+      <div class="module-icon gold">🌙</div>
+      <div class="module-card-tag tag-gold">AUTONOMOUS</div>
+      <div class="module-name">Nightly Audit Trail</div>
+      <div class="module-desc">Vultr Cron runs every night at midnight. Re-checks all tracked suppliers. Updates dashboard. Zero human input required. This is what true autonomy looks like.</div>
+      <div class="module-agents">
+        <span class="agent-chip">Vultr Cron</span>
+        <span class="agent-chip">Risk Re-scan</span>
+        <span class="agent-chip">Cyber Re-scan</span>
+        <span class="agent-chip">Alert System</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="tech-section" id="tech">
+  <div class="tech-inner">
+    <div class="section-label">TECHNOLOGY STACK</div>
+    <h2 class="section-title fade-in">Models benchmarked<br>on 600+ prompts.</h2>
+    <div class="tech-grid">
+      <div class="tech-card fade-in">
+        <div class="tech-provider">PRIMARY AI</div>
+        <div class="tech-name">Featherless AI</div>
+        <div class="tech-desc">Open-source model inference for all reasoning, analysis, and generation tasks.</div>
+        <div class="tech-models">
+          <span class="tech-model">DeepSeek-R1</span>
+          <span class="tech-model">Qwen 2.5 72B</span>
+          <span class="tech-model">Mistral Large</span>
+        </div>
+      </div>
+      <div class="tech-card fade-in">
+        <div class="tech-provider">MARKET DATA</div>
+        <div class="tech-name">Kraken API</div>
+        <div class="tech-desc">Real-time commodity and asset price feeds. No API key required for public endpoints.</div>
+        <div class="tech-models">
+          <span class="tech-model">Public Ticker API</span>
+          <span class="tech-model">Live OHLC Data</span>
+        </div>
+      </div>
+      <div class="tech-card fade-in">
+        <div class="tech-provider">CLOUD & INFRA</div>
+        <div class="tech-name">Vultr</div>
+        <div class="tech-desc">VM deployment, storage, firewall, and Cron Scheduler for the autonomous nightly audit.</div>
+        <div class="tech-models">
+          <span class="tech-model">Ubuntu 22.04 VM</span>
+          <span class="tech-model">Cron Scheduler</span>
+          <span class="tech-model">Object Storage</span>
+        </div>
+      </div>
+      <div class="tech-card fade-in">
+        <div class="tech-provider">OSINT SOURCES</div>
+        <div class="tech-name">Free OSINT</div>
+        <div class="tech-desc">Open-source cyber intelligence — no paid API keys required for any security checks.</div>
+        <div class="tech-models">
+          <span class="tech-model">crt.sh</span>
+          <span class="tech-model">urlscan.io</span>
+          <span class="tech-model">HaveIBeenPwned</span>
+          <span class="tech-model">Socket / SSL Scan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box fade-in">
+    <h2 class="cta-title">Ready to get started?</h2>
+    <p class="cta-sub">Launch the platform now. No signup required for the demo.</p>
+    <div class="cta-btns">
+      <button class="btn-primary-hero" onclick="window.location.href='/app'">
+        Launch TradeNexus AI →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">TradeNexus AI</div>
+  <div class="footer-text">AI-Powered Trade Intelligence for Every SME</div>
+  <div class="footer-hackathon">MILAN AI WEEK HACKATHON 2026 · lablab.ai</div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 5 + 'px';
+  cursor.style.top  = my - 5 + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx - 18) * 0.12;
+  ry += (my - ry - 18) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .module-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2)';
+    ring.style.transform = 'scale(1.5)';
+    ring.style.borderColor = 'rgba(0,229,160,0.7)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    ring.style.transform = 'scale(1)';
+    ring.style.borderColor = 'rgba(0,229,160,0.4)';
+  });
+});
+
+// Scroll fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Smooth nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

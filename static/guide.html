@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Guide — TradeNexus AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static\guide.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TradeNexus AI</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/app">← Back to Platform</a>
+    <a href="/app" class="nav-btn">Launch App →</a>
+  </div>
+</nav>
+
+<div class="guide-hero">
+  <div class="guide-hero-tag">PLATFORM GUIDE</div>
+  <h1>How Every Agent Works</h1>
+  <p>A complete walkthrough of all 9 modules — what they do, how to use them, and what to expect.</p>
+</div>
+
+<!-- AGENT TABS -->
+<div class="agent-tabs-wrap">
+  <div class="agent-tabs">
+    <button class="atab active" onclick="showGuide('supplier')">⚡ Supplier Risk</button>
+    <button class="atab" onclick="showGuide('doc')">📄 Doc Analysis</button>
+    <button class="atab" onclick="showGuide('visual')">📸 Visual Check</button>
+    <button class="atab" onclick="showGuide('dealflow')">🚀 DealFlow</button>
+    <button class="atab" onclick="showGuide('dashboard')">📊 Dashboard</button>
+    <button class="atab" onclick="showGuide('marketpulse')">🔮 MarketPulse</button>
+    <button class="atab" onclick="showGuide('cyber')">🔐 Cyber Risk</button>
+    <button class="atab" onclick="showGuide('microecon')">📊 Micro-Econ</button>
+    <button class="atab" onclick="showGuide('audit')">🌙 Audit Trail</button>
+  </div>
+</div>
+
+<div class="guide-body">
+
+  <!-- ══ SUPPLIER RISK ══ -->
+  <div class="guide-panel active" id="guide-supplier">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(0,229,160,0.1);">⚡</div>
+      <div>
+        <div class="panel-tag">MODULE A</div>
+        <h2>Supplier Risk Analysis</h2>
+        <p>Real-time AI risk scoring for any supplier worldwide.</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <span>⚠️</span>
+      <p><strong>Note:</strong> All scores are AI-generated from public data. Not financial or legal advice. Always verify critical decisions with primary sources. Takes 15–45 seconds.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Enter supplier details</h3><p>Provide the company name, industry, and country. The more specific, the better — use full legal names (e.g. "Evergrande Group" not "Evergrande").</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>News Agent scans intelligence</h3><p>Queries AI knowledge for bankruptcies, sanctions, disasters, scandals, and leadership changes. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+      <div class="step"><div class="step-num">STEP 2</div><div class="step-content"><h3>Risk Agent scores the supplier</h3><p>Applies structured scoring logic to produce a 0–100 risk score with specific risk factors and recommended actions. <span class="model-tag">DeepSeek-R1</span></p></div></div>
+      <div class="step"><div class="step-num">STEP 3</div><div class="step-content"><h3>Price Agent checks market</h3><p>Analyzes commodity price trends for the supplier's industry — giving market context to the risk picture.</p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Full risk report</h3><p>Risk score + level + summary + factors + actions + confidence + news summary + price data.</p></div></div>
+    </div>
+    <div class="score-grid">
+      <div class="score-card low"><div class="score-badge low">0–25</div><div><h4>✅ Low Risk</h4><p>Supplier appears stable. Safe to proceed with standard due diligence.</p></div></div>
+      <div class="score-card medium"><div class="score-badge medium">26–50</div><div><h4>🟡 Moderate Risk</h4><p>Some concerns. Monitor closely and consider requesting financial statements.</p></div></div>
+      <div class="score-card high"><div class="score-badge high">51–75</div><div><h4>🟠 High Risk</h4><p>Significant issues. Proceed with caution. Seek alternative suppliers.</p></div></div>
+      <div class="score-card critical"><div class="score-badge critical">76–100</div><div><h4>🔴 Critical Risk</h4><p>Severe risk. Consider suspending this supplier relationship immediately.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ══ DOC ANALYSIS ══ -->
+  <div class="guide-panel" id="guide-doc">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(59,110,255,0.1);">📄</div>
+      <div>
+        <div class="panel-tag">MODULE A</div>
+        <h2>Document Analysis</h2>
+        <p>Upload any supplier PDF — AI reads and extracts financial risk signals.</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <span>⚠️</span>
+      <p><strong>Note:</strong> Works best with text-based PDFs (not scanned images). Supports annual reports, contracts, financial statements. Max ~30 pages analyzed. Takes 30–60 seconds.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Upload a PDF file</h3><p>Annual report, contract, financial statement, or any supplier document. Enter the supplier name for context.</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>Text extraction</h3><p>System extracts text from PDF using pypdf / pdftotext. Up to 12,000 characters (roughly 30 pages) are analyzed.</p></div></div>
+      <div class="step"><div class="step-num">STEP 2</div><div class="step-content"><h3>AI financial analysis</h3><p>Reads the extracted text and identifies revenue trends, debt levels, profit/loss, red flags, and positive indicators. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Structured risk verdict</h3><p>Financial health summary + red flags + positive indicators + key risks + risk level + recommendation (SAFE / MONITOR / CAUTION / AVOID).</p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Best documents to upload:</strong> Annual reports (10-K, 10-Q), audited financial statements, supplier contracts with financial terms.</div>
+      <div class="tip"><strong>Scanned PDFs won't work well.</strong> The document must contain selectable text. If you can copy text from the PDF, it will work.</div>
+      <div class="tip"><strong>Combine with Supplier Risk.</strong> Run the supplier name check first, then upload their annual report for deeper financial analysis.</div>
+    </div>
+  </div>
+
+  <!-- ══ VISUAL CHECK ══ -->
+  <div class="guide-panel" id="guide-visual">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(168,85,247,0.1);">📸</div>
+      <div>
+        <div class="panel-tag">MODULE A</div>
+        <h2>Visual Check</h2>
+        <p>Upload a factory or warehouse photo — AI assesses physical condition and risk.</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <span>⚠️</span>
+      <p><strong>Note:</strong> Supports JPG, PNG, WebP images. Analysis is based on visible elements only — AI cannot detect hidden structural issues. Takes 20–45 seconds.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Upload a factory photo</h3><p>Any photo of the supplier's factory, warehouse, or facility. Clear, well-lit photos give better results.</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>Vision AI analyzes image</h3><p>A multimodal vision model examines the image for physical condition, safety issues, equipment state, and capacity signals. <span class="model-tag">Qwen 2.5 VL (fallback chain)</span></p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Physical risk assessment</h3><p>Condition rating (Poor/Fair/Good/Excellent) + Safety level + Red flags + Positive signs + Capacity status + Visual risk score (0–100).</p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>What the AI looks for:</strong> Flood or fire damage, abandoned equipment, structural issues, overcrowding, safety hazards, modern vs outdated machinery.</div>
+      <div class="tip"><strong>Best photo types:</strong> Wide shots of the factory floor, exterior building shots, warehouse storage areas, production lines.</div>
+      <div class="tip"><strong>If vision model is unavailable:</strong> The system will return a "manual inspection required" notice — not an error. This is the text-only fallback.</div>
+    </div>
+  </div>
+
+  <!-- ══ DEALFLOW ══ -->
+  <div class="guide-panel" id="guide-dealflow">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(6,182,212,0.1);">🚀</div>
+      <div>
+        <div class="panel-tag">MODULE B</div>
+        <h2>DealFlow AI</h2>
+        <p>Find global buyers for your product — AI scouts, qualifies, and writes outreach emails.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Describe your product</h3><p>Enter your product (e.g. "handmade leather bags"), industry (e.g. "fashion"), target region (EU, North America, Asia…), and your company name.</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>Scout Agent finds buyers</h3><p>AI searches its knowledge for matching importers, retailers, distributors, and manufacturers in your target region. Returns up to 5 qualified leads. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+      <div class="step"><div class="step-num">STEP 2</div><div class="step-content"><h3>Qualify Agent scores each buyer</h3><p>Each buyer gets a fit score (0–100) based on company size, type, and alignment with your product and industry.</p></div></div>
+      <div class="step"><div class="step-num">STEP 3</div><div class="step-content"><h3>Outreach Agent writes the email</h3><p>Click "Generate Email" on any buyer card — AI writes a personalized cold outreach email with subject line and follow-up message. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Ready-to-send leads</h3><p>Buyer list with company, country, type, fit reason, contact format, and personalized outreach email per buyer.</p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Be specific with your product.</strong> "Premium handmade leather handbags" gives better matches than "bags".</div>
+      <div class="tip"><strong>Try different regions.</strong> Run separate searches for EU, North America, and Asia Pacific to build a full global pipeline.</div>
+      <div class="tip"><strong>Contacts are estimated.</strong> Email formats shown are generic (info@company.com). Always verify real contacts via LinkedIn or company websites.</div>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="guide-panel" id="guide-dashboard">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(251,191,36,0.1);">📊</div>
+      <div>
+        <div class="panel-tag">MODULE C</div>
+        <h2>Analytics Dashboard</h2>
+        <p>Live overview of all your suppliers, leads, and an AI daily briefing.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">AUTO</div><div class="step-content"><h3>Data populates automatically</h3><p>Every supplier you analyze and every buyer you find is saved in memory during your session. The dashboard aggregates all of it.</p></div></div>
+      <div class="step"><div class="step-num">SECTION 1</div><div class="step-content"><h3>Stats overview</h3><p>Total suppliers analyzed, how many are high risk (score &gt; 50), and total leads found in this session.</p></div></div>
+      <div class="step"><div class="step-num">SECTION 2</div><div class="step-content"><h3>Supplier risk heatmap</h3><p>All analyzed suppliers listed with their risk score and level — color coded green / yellow / orange / red.</p></div></div>
+      <div class="step"><div class="step-num">SECTION 3</div><div class="step-content"><h3>Top leads</h3><p>Your top 5 found buyers with company name, country, and fit reason.</p></div></div>
+      <div class="step"><div class="step-num">SECTION 4</div><div class="step-content"><h3>AI Daily Briefing</h3><p>AI generates a 3-priority business intelligence report based on your session data — what to do today, what to watch, and what opportunity to act on. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Analyze at least 2–3 suppliers first</strong> before opening Dashboard — the briefing needs data to generate meaningful insights.</div>
+      <div class="tip"><strong>Session-based only.</strong> Data resets when the server restarts. The Nightly Audit Trail provides persistent tracking.</div>
+    </div>
+  </div>
+
+  <!-- ══ MARKETPULSE ══ -->
+  <div class="guide-panel" id="guide-marketpulse">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(99,102,241,0.1);">🔮</div>
+      <div>
+        <div class="panel-tag">MODULE D</div>
+        <h2>MarketPulse AI</h2>
+        <p>Three-layer commodity market prediction — 24 hours to 10 years.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Enter commodity and industry</h3><p>Specify the raw material (e.g. "cotton"), your industry (e.g. "textile"), region, and country. All three prediction layers run simultaneously.</p></div></div>
+      <div class="step"><div class="step-num">LAYER 1</div><div class="step-content"><h3>Tomorrow Agent — 24–48 hours</h3><p>Uses Tree-of-Thought reasoning to evaluate weather patterns, supply chain signals, and currency movements for short-term price prediction. Returns direction (UP/DOWN/STABLE), probability %, and price change estimate. <span class="model-tag">DeepSeek-R1</span></p></div></div>
+      <div class="step"><div class="step-num">LAYER 2</div><div class="step-content"><h3>Trend Agent — 1–5 years</h3><p>Analyzes industry demand growth, ESG regulations, technology disruption, and trade policy changes for medium-term outlook. Returns CAGR estimate, top opportunities, threats, and SME action items. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+      <div class="step"><div class="step-num">LAYER 3</div><div class="step-content"><h3>Mega Trend Agent — 5–10 years</h3><p>Forecasts climate change impact, AI/automation disruption, geopolitical realignment, and demographic shifts specific to your country. Returns mega trends with probability scores and survival strategies. <span class="model-tag">Mistral Large</span></p></div></div>
+      <div class="step"><div class="step-num">BONUS</div><div class="step-content"><h3>Micro-Econ Agent</h3><p>See Micro-Econ tab for details on the HHI monopoly analysis and Utility Maximization purchasing optimization.</p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Layer 1 is most actionable.</strong> Use it before making large purchase decisions — e.g. whether to stock up on cotton this week or wait.</div>
+      <div class="tip"><strong>Full run takes 30–90 seconds.</strong> All three agents run in parallel — you can also run each layer individually for speed.</div>
+      <div class="tip"><strong>Predictions are probabilistic, not certain.</strong> The confidence score tells you how reliable the prediction is based on available signals.</div>
+    </div>
+  </div>
+
+  <!-- ══ CYBER RISK ══ -->
+  <div class="guide-panel" id="guide-cyber">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(239,68,68,0.1);">🔐</div>
+      <div>
+        <div class="panel-tag">MODULE A — NEW</div>
+        <h2>Cyber Risk Agent</h2>
+        <p>Free OSINT scan of any supplier's IT security posture — no API keys needed.</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <span>⚠️</span>
+      <p><strong>Note:</strong> This scan uses only publicly available information (OSINT). No hacking or unauthorized access is performed. Results depend on what is publicly exposed. Takes 30–60 seconds.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Enter company name</h3><p>Optionally add the domain (e.g. evergrande.com). If no domain is given, the system guesses it from the company name.</p></div></div>
+      <div class="step"><div class="step-num">CHECK 1</div><div class="step-content"><h3>SSL Certificate scan</h3><p>Checks if the supplier's website has a valid SSL certificate and how many days until expiry. Expired or missing SSL is a red flag.</p></div></div>
+      <div class="step"><div class="step-num">CHECK 2</div><div class="step-content"><h3>Open port scan</h3><p>Scans 12 common ports (FTP, SSH, RDP, MySQL, MongoDB, Redis…). Exposed database or remote access ports are serious vulnerabilities.</p></div></div>
+      <div class="step"><div class="step-num">CHECK 3</div><div class="step-content"><h3>Data breach check</h3><p>Queries HaveIBeenPwned free domain API to check if the supplier's domain has appeared in known data breaches.</p></div></div>
+      <div class="step"><div class="step-num">CHECK 4</div><div class="step-content"><h3>Malware scan</h3><p>Queries urlscan.io free API to check if the domain has been flagged for malware, phishing, or suspicious activity.</p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Cyber risk score + AI analysis</h3><p>Score 0–100 + risk level + key vulnerabilities + red flags + attack vectors + recommendation. <span class="model-tag">Qwen 2.5 72B</span></p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>A supplier with exposed RDP or database ports</strong> is a supply chain attack vector — attackers can compromise their systems and reach you.</div>
+      <div class="tip"><strong>Run this alongside financial risk.</strong> A financially stable supplier with poor IT security is still a major liability.</div>
+    </div>
+  </div>
+
+  <!-- ══ MICRO-ECON ══ -->
+  <div class="guide-panel" id="guide-microecon">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(6,182,212,0.1);">📊</div>
+      <div>
+        <div class="panel-tag">MODULE D — NEW</div>
+        <h2>Micro-Econ Agent</h2>
+        <p>HHI monopoly analysis + Utility Maximization for smarter purchasing decisions.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">INPUT</div><div class="step-content"><h3>Add 2+ suppliers</h3><p>For each supplier enter: name, market share %, price per unit, quality score (0–10), and units needed. Set your total budget.</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>HHI Index calculation</h3><p>Herfindahl-Hirschman Index = sum of squared market shares. Measures supplier market concentration.<br><br>
+      <strong>HHI &lt; 1,500</strong> = Competitive market — you have bargaining power<br>
+      <strong>1,500–2,500</strong> = Moderately concentrated — negotiate carefully<br>
+      <strong>&gt; 2,500</strong> = Monopoly risk — supplier has pricing power over you</p></div></div>
+      <div class="step"><div class="step-num">STEP 2</div><div class="step-content"><h3>Utility Maximization</h3><p>Calculates utility per dollar (quality ÷ price) for each supplier and finds the optimal purchase allocation within your budget — maximizing value, not just minimizing cost.</p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Purchase strategy</h3><p>Market structure verdict + buyer bargaining power + recommended action (BUY NOW / WAIT / NEGOTIATE / DIVERSIFY) + optimal lock-in % + ranked supplier table. <span class="model-tag">DeepSeek-R1</span></p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Use before large orders.</strong> If one supplier has &gt; 60% market share, you have low bargaining power — the HHI will flag this and recommend negotiation tactics.</div>
+      <div class="tip"><strong>Quality score is subjective.</strong> Rate each supplier based on your own experience — 1 = very poor, 10 = exceptional.</div>
+    </div>
+  </div>
+
+  <!-- ══ AUDIT TRAIL ══ -->
+  <div class="guide-panel" id="guide-audit">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:rgba(251,191,36,0.1);">🌙</div>
+      <div>
+        <div class="panel-tag">AUTONOMOUS SYSTEM</div>
+        <h2>Nightly Audit Trail</h2>
+        <p>Fully autonomous supplier monitoring — runs every night at midnight with zero human input.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">HOW</div><div class="step-content"><h3>Vultr Cron Scheduler</h3><p>A single cron job runs every night at 00:00 UTC:<br><code style="background:rgba(255,255,255,0.06);padding:4px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">0 0 * * * python nightly_audit_trail.py</code><br><br>No human trigger. No login required. Fully autonomous.</p></div></div>
+      <div class="step"><div class="step-num">STEP 1</div><div class="step-content"><h3>Loads all tracked suppliers</h3><p>Every supplier you analyze is automatically added to the tracking list (data/tracked_suppliers.json). The audit re-checks all of them.</p></div></div>
+      <div class="step"><div class="step-num">STEP 2</div><div class="step-content"><h3>Risk re-scan</h3><p>Calls the same risk analysis pipeline on each supplier — updating their score if anything has changed overnight.</p></div></div>
+      <div class="step"><div class="step-num">STEP 3</div><div class="step-content"><h3>Cyber re-scan</h3><p>Runs OSINT cyber check on each supplier — detects newly exposed ports, expired SSL certificates, or new breach records.</p></div></div>
+      <div class="step"><div class="step-num">STEP 4</div><div class="step-content"><h3>Alerts generated</h3><p>Any supplier scoring &gt; 75 (Critical) or &gt; 50 (High Risk) generates an alert. Cyber score &gt; 70 generates a cyber alert.</p></div></div>
+      <div class="step"><div class="step-num">OUTPUT</div><div class="step-content"><h3>Summary saved to dashboard</h3><p>Results saved to logs/last_audit_summary.json. View anytime in the Audit Trail tab — timestamp, duration, alerts, per-supplier scores.</p></div></div>
+    </div>
+    <div class="tips-list">
+      <div class="tip"><strong>Click "Run Audit Now"</strong> in the Audit Trail tab to trigger a manual run for demo purposes — results appear in ~65 seconds.</div>
+      <div class="tip"><strong>On Vultr VM:</strong> Set up the cron job once and it runs every night automatically — no maintenance needed.</div>
+      <div class="tip"><strong>Suppliers are auto-tracked.</strong> Every time you run a supplier risk analysis, that supplier is automatically added to the nightly audit list.</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="guide-cta">
+    <h3>Ready to get started?</h3>
+    <p>Launch the platform and run your first analysis in under 60 seconds.</p>
+    <a href="/app" class="guide-cta-btn">Launch TradeNexus AI →</a>
+  </div>
+
+</div>
+
+<script>
+function showGuide(name) {
+  document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+  document.getElementById('guide-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top: document.querySelector('.agent-tabs-wrap').offsetTop - 70, behavior: 'smooth'});
+}
+
+// Highlight tab from URL hash
+const hash = window.location.hash.replace('#','');
+if (hash) {
+  const btn = document.querySelector(`.atab[onclick*="${hash}"]`);
+  if (btn) { btn.click(); }
+}
+</script>
+</body>
+</html>
